@@ -3,52 +3,11 @@
 require_once '../server/DBConnector.php';
 require_once '../server/company.php';
 require_once '../server/jobseeker.php';
-
+include 'functions.php';
 use server\DbConnector;
 
 $dbcon = new DbConnector();
 session_start();
-
-function profilepath($path)
-{
-    if ($path === null) {
-        echo '../../img/userDefault.jpg';
-    } else {
-        echo $path;
-    }
-}
-
-function formatDateTime($datetimeStr)
-{
-    // Create a DateTime object from the provided string
-    $datetime = new DateTime($datetimeStr);
-
-    // Format the DateTime object to the desired format
-    return $datetime->format("M jS g.i A");
-}
-
-function statusdisplay($status)
-{
-    switch ($status) {
-        case 'Waiting':
-            echo '<div class="alert alert-primary m-0 p-1 ms-1 text-center " role="alert"> Waiting </div>';
-            break;
-        case 'Reject':
-            echo '<div class="alert alert-danger m-0 p-1 ms-1 text-center " role="alert"> Rejected </div>';
-            break;
-        case 'Accept':
-            echo '<div class="alert alert-success m-0 p-1 ms-1 text-center " role="alert"> Selected </div>';
-            break;
-    }
-}
-
-function calculateAge($dateOfBirth)
-{
-    $dob = new DateTime($dateOfBirth);
-    $today = new DateTime('today');
-    $age = $dob->diff($today)->y;
-    return $age;
-}
 
 // Check if the jobseeker session variables are set 
 if (!isset($_SESSION["userID"]) || !isset($_SESSION["username"]) || !isset($_SESSION["email"])) {
@@ -94,210 +53,210 @@ try {
     }
     ?>
 
-    <html>
+<html>
 
-    <head>
-        <meta charset="UTF-8">
-        <title>HireSpot</title>
-        <!-- favicon -->
-        <link rel="shortcut icon" href="../../img/logo only.png" type="image/x-icon">
-        <!--bootstrap-->
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet"
-            integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
-        <!--fontawesom-->
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-            integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
-            crossorigin="anonymous" referrerpolicy="no-referrer" />
-        <!--main css-->
-        <link rel="stylesheet" href="../../css/maincss.css" />
+<head>
+    <meta charset="UTF-8">
+    <title>HireSpot</title>
+    <!-- favicon -->
+    <link rel="shortcut icon" href="../../img/logo only.png" type="image/x-icon">
+    <!--bootstrap-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+    <!-- Poppins font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <!--fontawesom-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+        integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!--main css-->
+    <link rel="stylesheet" href="../../css/maincss.css" />
+</head>
 
-    </head>
+<body style="font-family: 'Poppins', sans-serif;">
+    <style>
+        body {
+            background-color: #F1F0F0;
+            overflow-x: hidden;
+        }
 
-    <body>
-        <style>
-            body {
-                background-color: #F1F0F0;
-                overflow-x: hidden;
-            }
+        .scrallbar {
+            overflow: auto !important;
+        }
 
-            .scrallbar {
-                overflow: auto !important;
-            }
+        .fs-0 {
+            font-size: 4rem;
+        }
 
-            .fs-0 {
-                font-size: 4rem;
-            }
+        .fs-7 {
+            font-size: 0.8rem;
+        }
 
-            .fs-7 {
-                font-size: 0.8rem;
-            }
+        .active-quicklink:hover {
+            color: blue !important;
+        }
+    </style>
+    <nav class="navbar navbar-expand-lg bg-white fixed-top">
+        <div class="container">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <a class="navbar-brand " href="../../index.php"><img src="../../img/logo.png" width="137px" height="43px"
+                    alt="HireSpot" /></a>
+            <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
+                <ul class="navbar-nav">
 
-            .active-quicklink:hover {
-                color: blue !important;
-            }
-        </style>
-        <nav class="navbar navbar-expand-lg bg-white fixed-top">
-            <div class="container">
-
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <a class="navbar-brand " href="../../index.php"><img src="../../img/logo.png" width="137px" height="43px"
-                        alt="HireSpot" /></a>
-                <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
-                    <ul class="navbar-nav">
-
-                        <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="../../index.php">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <!--search-->
-                            <form class="d-flex" role="search" action="./feed.php" method="post">
-                                <select class="form-control me-2 border-0" id="inputGroupSelect01" name="searchjobCategory"
-                                    style="border-radius: 50px;background-color: #F4F4F4;max-width: 20rem;">
-                                    <option disabled selected class="text-muted">
-                                        <?php
-                                        if (isset($_POST['searchjobCategory']) && !empty($_POST['searchjobCategory'])) {
-                                            echo $searchjobCategory;
-                                        } else {
-                                            echo 'search';
-                                        }
-                                        ?>
-                                    </option>
-                                    <option value="Information Technology (IT)">Information Technology
-                                        (IT)
-                                    </option>
-                                    <option value="Healthcare">Healthcare</option>
-                                    <option value="Finance">Finance</option>
-                                    <option value="Education">Education</option>
-                                    <option value="Marketing and Sales">Marketing and Sales</option>
-                                    <option value="Engineering">Engineering</option>
-                                    <option value="Hospitality and Tourism">Hospitality and Tourism
-                                    </option>
-                                    <option value="Creative Arts">Creative Arts</option>
-                                    <option value="Human Resources">Human Resources</option>
-                                    <option value="Construction and Trades">Construction and Trades
-                                    </option>
-                                </select>
-                                <button class="btn btn-outline-primary " type="submit" style="border-radius: 50px;"><i
-                                        class="fa fa-magnifying-glass "></i></button>
-                            </form>
-
-                        </li>
-                        <li class="nav-item">
-                            <?php
-                            if (isset($_POST['searchjobCategory']) && !empty($_POST['searchjobCategory'])) {
-                                echo '<li class="nav-item"><a class="nav-link active" aria-current="page" href="./feed.php">ALL</a></li>';
-                            }
-                            ?>
-
-                    </ul>
-                </div>
-                <div class="d-flex ">
-                    <!--notification-->
-                    <?php
-                    try {
-                        $connotification = $dbcon->getConnection();
-
-                        $querynotification = "SELECT application.applicationID, application.status, application.date, job.jobTitle, job.jobcateogory, job.content, company.companyname, company.profilePic FROM application JOIN job ON application.jobID = job.jobID JOIN company ON job.companyID = company.companyID WHERE application.userID = ? AND application.status != 'Waiting' ORDER BY application.date DESC;";
-
-                        $pstmtnotification = $connotification->prepare($querynotification);
-                        $pstmtnotification->bindValue(1, $id);
-
-                        $pstmtnotification->execute();
-
-                        $notifications = $pstmtnotification->fetchAll(PDO::FETCH_OBJ);
-                        $count = $pstmtnotification->rowCount();
-                        ?>
-                        <div class="dropdown ">
-                            <a class="navbar-brand position-relative" href="" id="notify"
-                                style="width: 38px; height: 38px; object-fit: cover" type="button" data-bs-toggle="dropdown"
-                                aria-expanded="false" data-bs-auto-close="outside"><i class="fa-solid fa-bell"
-                                    data-bs-toggle="tooltip" data-bs-title=" See your Notification" data-bs-placement="bottom"
-                                    data-bs-title="Tooltip on bottom"></i>
-                                <span class="position-absolute fs-7 p-1 translate-middle badge rounded-pill bg-danger">
-                                    <?php echo $count; ?>
-                                </span></a>
-
-                            <!-- notification dropdown -->
-                            <ul class="dropdown-menu border-0 shadow p-2 px-0" aria-labelledby="notify"
-                                style="min-width: 18rem;max-height: 600px;overflow-y: auto;">
-                                <!-- header -->
-                                <li class="p-1">
-
-                                    <h4 class="ms-2">Notification</h4>
-
-                                </li>
-                                <?php
-                                foreach ($notifications as $notification) {
-
-                                    $notyapplicationID = $notification->applicationID;
-                                    $notystatus = $notification->status;
-                                    $notydate = $notification->date;
-                                    $notyjobTitle = $notification->jobTitle;
-                                    $notyjobcateogory = $notification->jobcateogory;
-                                    $notycontent = $notification->content;
-                                    $notycompanyname = $notification->companyname;
-                                    $notyprofilePic = $notification->profilePic;
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="../../index.php">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <!--search-->
+                        <form class="d-flex" role="search" action="./feed.php" method="post">
+                            <select class="form-control me-2 border-0" id="inputGroupSelect01" name="searchjobCategory"
+                                style="border-radius: 50px;background-color: #F4F4F4;max-width: 20rem;">
+                                <option disabled selected class="text-muted">
+                                    <?php
+                                    if (isset($_POST['searchjobCategory']) && !empty($_POST['searchjobCategory'])) {
+                                        echo $searchjobCategory;
+                                    } else {
+                                        echo 'search';
+                                    }
                                     ?>
-                                    <!-- n1 -->
-                                    <li class="my-1 p-2">
+                                </option>
+                                <option value="Information Technology (IT)">Information Technology
+                                    (IT)
+                                </option>
+                                <option value="Healthcare">Healthcare</option>
+                                <option value="Finance">Finance</option>
+                                <option value="Education">Education</option>
+                                <option value="Marketing and Sales">Marketing and Sales</option>
+                                <option value="Engineering">Engineering</option>
+                                <option value="Hospitality and Tourism">Hospitality and Tourism
+                                </option>
+                                <option value="Creative Arts">Creative Arts</option>
+                                <option value="Human Resources">Human Resources</option>
+                                <option value="Construction and Trades">Construction and Trades
+                                </option>
+                            </select>
+                            <button class="btn btn-outline-primary " type="submit" style="border-radius: 50px;"><i
+                                    class="fa fa-magnifying-glass "></i></button>
+                        </form>
 
-                                        <div class="d-flex align-items-center">
-                                            <!-- avatar -->
-                                            <div class="p-2">
-                                                <img src="<?php profilepath($notyprofilePic); ?>" alt="company"
-                                                    class=" rounded-circle" style="width: 58px; height: 58px; object-fit: cover">
+                    </li>
+                    <li class="nav-item">
+                        <?php
+                        if (isset($_POST['searchjobCategory']) && !empty($_POST['searchjobCategory'])) {
+                            echo '<li class="nav-item"><a class="nav-link active" aria-current="page" href="./feed.php">ALL</a></li>';
+                        }
+                        ?>
+
+                </ul>
+            </div>
+            <div class="d-flex ">
+                <!--notification-->
+                <?php
+                try {
+                    $connotification = $dbcon->getConnection();
+
+                    $querynotification = "SELECT application.applicationID, application.status, application.date, job.jobTitle, job.jobcateogory, job.content, company.companyname, company.profilePic FROM application JOIN job ON application.jobID = job.jobID JOIN company ON job.companyID = company.companyID WHERE application.userID = ? AND application.status != 'Waiting' ORDER BY application.date DESC;";
+
+                    $pstmtnotification = $connotification->prepare($querynotification);
+                    $pstmtnotification->bindValue(1, $id);
+
+                    $pstmtnotification->execute();
+
+                    $notifications = $pstmtnotification->fetchAll(PDO::FETCH_OBJ);
+                    $count = $pstmtnotification->rowCount();
+                    ?>
+                    <div class="dropdown ">
+                        <a class="navbar-brand position-relative" href="" id="notify"
+                            style="width: 38px; height: 38px; object-fit: cover" type="button" data-bs-toggle="dropdown"
+                            aria-expanded="false" data-bs-auto-close="outside"><i class="fa-solid fa-bell"
+                                data-bs-toggle="tooltip" data-bs-title=" See your Notification" data-bs-placement="bottom"
+                                data-bs-title="Tooltip on bottom"></i>
+                            <span class="position-absolute fs-7 p-1 translate-middle badge rounded-pill bg-danger">
+                                <?php echo $count; ?>
+                            </span></a>
+
+                        <!-- notification dropdown -->
+                        <ul class="dropdown-menu border-0 shadow p-2 px-0" aria-labelledby="notify"
+                            style="min-width: 18rem;max-height: 600px;overflow-y: auto;">
+                            <!-- header -->
+                            <li class="p-1">
+
+                                <h4 class="ms-2">Notification</h4>
+
+                            </li>
+                            <?php
+                            foreach ($notifications as $notification) {
+
+                                $notyapplicationID = $notification->applicationID;
+                                $notystatus = $notification->status;
+                                $notydate = $notification->date;
+                                $notyjobTitle = $notification->jobTitle;
+                                $notyjobcateogory = $notification->jobcateogory;
+                                $notycontent = $notification->content;
+                                $notycompanyname = $notification->companyname;
+                                $notyprofilePic = $notification->profilePic;
+                                ?>
+                                <!-- n1 -->
+                                <li class="my-1 p-2">
+
+                                    <div class="d-flex align-items-center">
+                                        <!-- avatar -->
+                                        <div class="p-2">
+                                            <img src="<?php profilepath($notyprofilePic); ?>" alt="company"
+                                                class=" rounded-circle" style="width: 58px; height: 58px; object-fit: cover">
+                                        </div>
+                                        <!-- message -->
+                                        <div class="">
+                                            <div class="d-flex">
+                                                <p class="fw-bold me-2 m-0">
+                                                    <?php echo $notyjobTitle; ?>
+                                                </p>| 
+                                                <span class="text-muted fs-7 mt-1 ms-2 m-0">
+                                                    <?php echo $notyjobcateogory; ?>
+                                                </span>
                                             </div>
-                                            <!-- message -->
-                                            <div class="">
-                                                <div class="d-flex">
-                                                    <p class="fw-bold me-2 m-0">
-                                                        <?php echo $notyjobTitle; ?>
-                                                    </p>|
-                                                    <span class="text-muted fs-7 mt-1 ms-2 m-0">
-                                                        <?php echo $notyjobcateogory; ?>
+                                            <div class="d-flex">
+                                                <div class="">
+                                                    <p class="fs-7 m-0">
+                                                        @
+                                                        <?php echo $notycompanyname; ?>
+                                                    </p>
+                                                    <span class="fs-7 text-primary">
+                                                        <?php echo formatDateTime($notydate); ?>
                                                     </span>
                                                 </div>
-                                                <div class="d-flex">
-                                                    <div class="">
-                                                        <p class="fs-7 m-0">
-                                                            @
-                                                            <?php echo $notycompanyname; ?>
-                                                        </p>
-                                                        <span class="fs-7 text-primary">
-                                                            <?php echo formatDateTime($notydate); ?>
-                                                        </span>
-                                                    </div>
-                                                    <div class="ms-2">
-                                                        <?php echo statusdisplay($notystatus); ?>
-                                                    </div>
+                                                <div class="ms-2">
+                                                    <?php echo statusdisplay($notystatus); ?>
                                                 </div>
-
-
                                             </div>
 
-                                            <hr>
-                                    </li>
-                                    <?php
-                                }
-                                ;
-                                if (empty($notifications)) {
-                                    // if no post availabe 
-                                    echo "
-                                            <p class='text-muted p-2 text-center' role='alert'>
-                                            No Notifications available yet!
-                                         </p>";
-                                }
-                    } catch (PDOException $exc) {
-                        echo "
-                                <div class='alert alert-warning alert-dismissible fade show' role='alert'>
-                                " . $exc->getMessage() . "
-                                <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
-                             </div>";
-                    }
-                    ?>
+
+                                        </div>
+
+                                        <hr>
+                                </li>
+                                <?php
+                            }
+                            ;
+                            if (empty($notifications)) {
+                                // if no post availabe 
+                                echo "
+                                        <p class='text-muted p-2 text-center' role='alert'>
+                                        No Notifications available yet!
+                                     </p>";
+                            }
+                } catch (PDOException $exc) {
+                    echo "
+                            <div class='alert alert-warning alert-dismissible fade show' role='alert'>
+                            " . $exc->getMessage() . "
+                            <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+                         </div>";
+                }
+                ?>
                         </ul>
                     </div>
                 </div>

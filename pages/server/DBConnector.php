@@ -7,7 +7,7 @@ use PDO;
 class DbConnector{
 
     private $host = "localhost";
-    private $dbname = "hirespot";
+    private $dbname = "workwave";
     private $dbuser = "root";
     private $dbpw = "";
 
